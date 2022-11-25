@@ -1,4 +1,6 @@
 using System.IO.Ports;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace TestProject1
 {
@@ -10,7 +12,18 @@ namespace TestProject1
         {
 
             //Arrange
-            Console.WriteLine("Available Ports:");
+            // print some version infos
+            Console.Write($"{RuntimeInformation.FrameworkDescription.ToString()}, ");
+            //Console.WriteLine(RuntimeInformation.OSArchitecture.ToString());
+            Console.Write($"{RuntimeInformation.OSDescription.ToString()}, ");
+            // Console.WriteLine(RuntimeInformation.ProcessArchitecture.ToString());
+            Console.WriteLine(RuntimeInformation.RuntimeIdentifier.ToString());
+
+            AssemblyName[] names = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
+            foreach (AssemblyName name in names) { Console.WriteLine(name.ToString()); }
+
+            // list available serial ports and use the first one
+            Console.Write("\nAvailable Ports: ");
             string[] AvailablePorts = SerialPort.GetPortNames();
 
             if (AvailablePorts.Length == 0)
@@ -19,15 +32,10 @@ namespace TestProject1
                 return;
             }
 
-            foreach (string s in AvailablePorts)
-            {
-                Console.WriteLine("   {0}", s);
-            }
-
-            StringComparer stringComparer = StringComparer.OrdinalIgnoreCase;
+            foreach (string s in AvailablePorts) { Console.Write("{0} ", s); }
 
             string Port = AvailablePorts[0];
-            Console.WriteLine($"Testing with {Port}");
+            Console.WriteLine($"\nTesting with {Port}");
             // Create a new SerialPort object with default settings.
             SerialPort _serialPort = new SerialPort(Port, 115200, Parity.None, 8, StopBits.One);
             _serialPort.Handshake = Handshake.None;
