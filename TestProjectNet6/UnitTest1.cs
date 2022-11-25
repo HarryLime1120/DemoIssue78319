@@ -1,8 +1,11 @@
-using System.IO.Ports;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System;
+using System.IO.Ports;
+using System.Threading;
 
-namespace TestProject1
+namespace TestProjectNet6
 {
     [TestClass]
     public class UnitTest1
@@ -53,6 +56,7 @@ namespace TestProject1
 
             // Assert
             Assert.ThrowsException<TimeoutException>(act);
+
         }
     }
 }
