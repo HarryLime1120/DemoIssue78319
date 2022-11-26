@@ -6,3 +6,5 @@ github workflow added. Demonstrates the problem is also recreatable in the githu
 Contains 2 csproj:
 TargetFramework net7.0 and System.IO.Ports 7.0.0  => test FAILS because it raises an unexpected System.IO.IOException
 TargetFramework net6.0 and System.IO.Ports 7.0.0  => test passes OK because it raises a TimeoutException as expected
+
+Test uses a serial port. Make sure that no serial characters are coming in.

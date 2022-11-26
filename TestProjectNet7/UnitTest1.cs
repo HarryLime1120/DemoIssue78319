@@ -1,14 +1,17 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO.Ports;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 
-namespace TestProjectNet7
+namespace TestProject
 {
     [TestClass]
     public class UnitTest1
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TestSerialPortRcvTimeout()
         {
 
             //Arrange
@@ -41,18 +44,20 @@ namespace TestProjectNet7
             _serialPort.Handshake = Handshake.None;
 
             // Set the read/write timeouts
-            _serialPort.ReadTimeout = 500;
+            int ReadTimeout = 500;
+            _serialPort.ReadTimeout = ReadTimeout;
             _serialPort.WriteTimeout = 500;
 
             _serialPort.Open();
 
             //Act
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            Action act = () => { _serialPort.ReadLine(); Thread.Sleep(1000); _serialPort.Close(); };
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            string TestData = "123456";
+            string SerialDataReceived = TestData;
+            Action act = () => { SerialDataReceived = _serialPort.ReadLine(); Thread.Sleep(ReadTimeout * 2); _serialPort.Close(); };
 
             // Assert
             Assert.ThrowsException<TimeoutException>(act);
+            Assert.AreEqual(SerialDataReceived, TestData);
         }
     }
 }
